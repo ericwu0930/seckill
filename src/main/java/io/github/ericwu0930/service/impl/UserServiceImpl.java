@@ -38,10 +38,34 @@ public class UserServiceImpl implements UserService {
             throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR);
         }
         User user = convertFromModel(userModel);
-        userMapper.insertSelective(user);
+        try {
+            userMapper.insertSelective(user);
+        } catch (Exception e) {
+            throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR,"手机号已重复");
+        }
 
         UserPassword userPassword=convertPasswordFromModel(userModel,user);
         userPasswordMapper.insertSelective(userPassword);
+    }
+
+    @Override
+    public UserModel validateLogin(String telephone, String password) throws BusinessException {
+        // 通过用户的手机获取用户信息
+        User user=userMapper.selectByTelephone(telephone);
+
+        if(user==null)
+            throw new BusinessException(EmBusinessError.USER_LOGIN_FAIL);
+
+        UserPassword userPassword=userPasswordMapper.selectByUserId(user.getId());
+
+        UserModel userModel = convertFromDataObject(user, userPassword);
+
+        // 对比用户信息内加密的密码是否与sql中相匹配
+        if (StringUtils.equals(password,userPassword.getEncrptPassword())) {
+            return userModel;
+        }else{
+            throw new BusinessException(EmBusinessError.USER_LOGIN_FAIL);
+        }
     }
 
     private UserPassword convertPasswordFromModel(UserModel userModel,User user) {
