@@ -8,6 +8,8 @@ import io.github.ericwu0930.pojo.User;
 import io.github.ericwu0930.pojo.UserPassword;
 import io.github.ericwu0930.service.UserService;
 import io.github.ericwu0930.service.model.UserModel;
+import io.github.ericwu0930.validator.ValidationResult;
+import io.github.ericwu0930.validator.ValidatorImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,16 +28,23 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserPasswordMapper userPasswordMapper;
 
+    @Autowired
+    private ValidatorImpl validator;
+
     @Override
     @Transactional // 事务标签
     public void register(UserModel userModel) throws BusinessException {
         if(userModel==null)
             throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR);
-        if(StringUtils.isEmpty(userModel.getName())||
-                userModel.getGender()==null
-                ||userModel.getAge()==null
-                ||StringUtils.isEmpty(userModel.getTelephone())){
-            throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR);
+//        if(StringUtils.isEmpty(userModel.getName())||
+//                userModel.getGender()==null
+//                ||userModel.getAge()==null
+//                ||StringUtils.isEmpty(userModel.getTelephone())){
+//            throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR);
+//        }
+        ValidationResult validate = validator.validate(userModel);
+        if(validate.isHasErrors()){
+            throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR,validate.getErrMsg());
         }
         User user = convertFromModel(userModel);
         try {
