@@ -156,7 +156,7 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
 
-  <select id="selectByTelephone" parameterType="string" resultMap="BaseResultMap">
+  <select id="selectByTelephone" parameterType="java.lang.String" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List"/>
     from user_info
