@@ -92,13 +92,13 @@
                 xhrFields:{withCredentials:true},
                 success:function(data){
                     if(data.status=="success"){
-                        alert("注册成功");
+                        alert("商品创建成功");
                     }else{
-                        alert("注册失败，原因为"+data.data.errMsg);
+                        alert("商品创建失败，原因为"+data.data.errMsg);
                     }
                 },
                 error:function(data){
-                    alert("otp发送失败，原因为"+data.responseText)
+                    alert("商品创建失败，原因为"+data.responseText)
                 }
             });
             return false;
