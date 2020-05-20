@@ -11,6 +11,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author erichwu
@@ -44,8 +46,32 @@ public class ItemController extends BaseController{
         itemService.createItem(itemModel);
         ItemVO itemVO = convertVOFromModel(itemModel);
         return CommonReturnType.create(itemVO);
+    }
+
+    @ResponseBody
+    @RequestMapping(value="/list",method = {RequestMethod.GET})
+    public CommonReturnType listItem(){
+        List<ItemModel> itemModels = itemService.listItem();
+        List<ItemVO> collect = itemModels.stream().map(t -> {
+            ItemVO itemVO = convertVOFromModel(t);
+            return itemVO;
+        }).collect(Collectors.toList());
+        return CommonReturnType.create(collect);
+    }
+
+
+    @ResponseBody
+    @RequestMapping(value="/get",method={RequestMethod.GET})
+    public CommonReturnType getItem(@RequestParam(name="id")Integer id){
+        ItemModel itemModel=itemService.getItemById(id);
+
+        ItemVO itemVO = convertVOFromModel(itemModel);
+
+        return CommonReturnType.create(itemVO);
 
     }
+
+
     private ItemVO convertVOFromModel(ItemModel itemModel){
         ItemVO itemVO = new ItemVO();
         BeanUtils.copyProperties(itemModel,itemVO);

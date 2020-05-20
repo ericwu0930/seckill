@@ -26,7 +26,7 @@ public class ItemVO {
 
     private String description;
 
-    private Integer sals;
+    private Integer sales;
 
     private String imgUrl;
 }

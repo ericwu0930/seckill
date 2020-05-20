@@ -33,7 +33,7 @@ public class ItemModel {
     @NotBlank(message = "商品信息不能为空")
     private String description;
 
-    private Integer sals;
+    private Integer sales;
 
     @NotBlank(message = "图片信息不能为空")
     private String imgUrl;

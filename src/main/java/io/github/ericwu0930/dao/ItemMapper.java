@@ -3,6 +3,8 @@ package io.github.ericwu0930.dao;
 import io.github.ericwu0930.pojo.Item;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface ItemMapper {
     /**
@@ -52,4 +54,7 @@ public interface ItemMapper {
      * @mbg.generated Sun May 17 20:12:48 CST 2020
      */
     int updateByPrimaryKey(Item record);
+
+
+    List<Item> listItem();
 }
