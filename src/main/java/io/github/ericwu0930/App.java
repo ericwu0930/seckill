@@ -20,20 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class App 
 {
-    @Autowired
-    private UserMapper userMapper;
-
-    @RequestMapping("/")
-    public String home(){
-        User user = userMapper.selectByPrimaryKey(1);
-        if(user==null)
-            return "用户对象不存在";
-        else
-            return user.getName();
-    }
     public static void main( String[] args )
     {
-        System.out.println("Hello,world!");
         SpringApplication.run(App.class,args);
     }
 }
