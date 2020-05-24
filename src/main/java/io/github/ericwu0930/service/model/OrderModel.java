@@ -16,6 +16,8 @@ import java.math.BigDecimal;
 public class OrderModel {
     private String id;
 
+    private BigDecimal itemPrice;
+
     // 购买时商品单价
     private BigDecimal orderPrice;
 
@@ -25,5 +27,4 @@ public class OrderModel {
 
     private Integer amount;
 
-    private BigDecimal orderAmount;
 }

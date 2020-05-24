@@ -28,6 +28,11 @@
             </tbody>
         </table>
     </div>
+    <div class="form-actions">
+        <button class="btn blue" id="createorder" type="submit">
+            提交创建
+        </button>
+    </div>
 </div>
 </body>
 
@@ -35,6 +40,23 @@
     // 定义全局商品数组信息
     var g_itemList = [];
     jQuery(document).ready(function () {
+        $("#createorder").on("click",function(){
+            $.ajax({
+                type:"post",
+                url:"http://localhost:8090/order/createorder",
+                data:{
+                    "itemId":g_itemVO.id,
+                    "amount":1,
+                },
+                success: function(data){
+                    if(data.status=="success"){
+
+                    }else{
+                        alert("下单失败，原因为"+data.data.errMsg);
+                    }
+                }
+            })
+        })
         $.ajax({
             type: "GET",
             url: "http://localhost:8090/item/list",

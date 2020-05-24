@@ -103,6 +103,13 @@ public class ItemServiceImpl implements ItemService {
 
     }
 
+    @Override
+    @Transactional
+    public boolean decreaseStock(Integer itemId, Integer amount) {
+        int i = itemStockMapper.decreaseStock(itemId, amount);
+        return i!=0;
+    }
+
     private  ItemModel convertModelFromDataObject(Item item,ItemStock itemStock){
         ItemModel itemModel=new ItemModel();
         BeanUtils.copyProperties(item,itemModel);
