@@ -39,6 +39,5 @@ public enum EmBusinessError implements CommonError{
     public CommonError setErrorMsg(String errMsg) {
         this.errMsg=errMsg;
         return this;
-
     }
 }
