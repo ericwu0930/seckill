@@ -8,7 +8,9 @@ import io.github.ericwu0930.error.EmBusinessError;
 import io.github.ericwu0930.pojo.Item;
 import io.github.ericwu0930.pojo.ItemStock;
 import io.github.ericwu0930.service.ItemService;
+import io.github.ericwu0930.service.PromoService;
 import io.github.ericwu0930.service.model.ItemModel;
+import io.github.ericwu0930.service.model.PromoModel;
 import io.github.ericwu0930.validator.ValidationResult;
 import io.github.ericwu0930.validator.ValidatorImpl;
 import org.springframework.beans.BeanUtils;
@@ -35,6 +37,9 @@ public class ItemServiceImpl implements ItemService {
 
     @Autowired
     private ItemStockMapper itemStockMapper;
+
+    @Autowired
+    private PromoService promoService;
 
 
     private Item convertItemFromItemModel(ItemModel itemModel){
@@ -95,10 +100,13 @@ public class ItemServiceImpl implements ItemService {
         if(item==null)
             return null;
          // 操作获得库存数量
-        ItemStock itemStock = itemStockMapper.selectByItemId(id);
+        ItemStock itemStock = itemStockMapper.selectByItemId(item.getId());
 
         ItemModel itemModel=convertModelFromDataObject(item,itemStock);
 
+        PromoModel promoModel = promoService.getPromoByItemId(item.getId());
+        if(promoModel!=null&&promoModel.getStatus()==3)
+            itemModel.setPromoModel(promoModel);
         return itemModel;
 
     }

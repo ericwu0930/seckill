@@ -1,6 +1,7 @@
 package io.github.ericwu0930.dao;
 
 import io.github.ericwu0930.pojo.Promo;
+import io.github.ericwu0930.service.model.PromoModel;
 
 public interface PromoMapper {
     /**
@@ -50,4 +51,6 @@ public interface PromoMapper {
      * @mbg.generated Tue May 26 17:45:44 CST 2020
      */
     int updateByPrimaryKey(Promo record);
+
+    Promo selectByItemId(Integer itemId);
 }

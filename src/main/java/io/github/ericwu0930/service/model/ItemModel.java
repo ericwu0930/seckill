@@ -20,6 +20,8 @@ import java.math.BigDecimal;
 public class ItemModel {
     private Integer id;
 
+    private PromoModel promoModel;
+
     @NotBlank(message = "商品名称不能为空")
     private String title;
 
