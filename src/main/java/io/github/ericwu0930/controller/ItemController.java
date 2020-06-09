@@ -5,6 +5,8 @@ import io.github.ericwu0930.error.BusinessException;
 import io.github.ericwu0930.response.CommonReturnType;
 import io.github.ericwu0930.service.ItemService;
 import io.github.ericwu0930.service.model.ItemModel;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -78,7 +80,7 @@ public class ItemController extends BaseController{
         if(itemModel.getPromoModel()!=null){
             itemVO.setPromoStatus(itemModel.getPromoModel().getStatus());
             itemVO.setPromoId(itemModel.getPromoModel().getId());
-            itemVO.setStartTime(itemModel.getPromoModel().getStartTime());
+            itemVO.setStartTime(itemModel.getPromoModel().getStartTime().toString(DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")));
             itemVO.setEndTime(itemModel.getPromoModel().getEndTime());
         }
         return itemVO;

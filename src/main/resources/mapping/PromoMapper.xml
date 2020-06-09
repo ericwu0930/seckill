@@ -146,6 +146,6 @@
     select
     <include refid="Base_Column_List" />
     from promo
-    where itemId = #{itemId,jdbcType=INTEGER}
+    where item_id = #{itemId,jdbcType=INTEGER}
   </select>
 </mapper>
