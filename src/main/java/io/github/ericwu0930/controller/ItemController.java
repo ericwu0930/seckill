@@ -82,6 +82,7 @@ public class ItemController extends BaseController{
             itemVO.setPromoId(itemModel.getPromoModel().getId());
             itemVO.setStartTime(itemModel.getPromoModel().getStartTime().toString(DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss")));
             itemVO.setEndTime(itemModel.getPromoModel().getEndTime());
+            itemVO.setPromoPrice(itemModel.getPromoModel().getPromoItemPrice());
         }
         return itemVO;
     }
