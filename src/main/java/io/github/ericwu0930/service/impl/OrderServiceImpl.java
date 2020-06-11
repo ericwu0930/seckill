@@ -47,7 +47,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public OrderModel createOrder(Integer userId, Integer itemId, Integer amount) throws BusinessException {
+    public OrderModel createOrder(Integer userId, Integer itemId, Integer promoId, Integer amount) throws BusinessException {
         // 1. 校验下单状态 用户是否合法，购买数量是否正确
         ItemModel itemById = itemService.getItemById(itemId);
         if(itemById==null)
@@ -57,6 +57,14 @@ public class OrderServiceImpl implements OrderService {
             throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR,"用户信息不存在");
         if(amount<=0||amount>99)
             throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR,"订单数量不正确");
+        if(promoId!=null){
+            // (1) 校验对应活动是否存在这个适用商品
+            if(promoId!=itemById.getPromoModel().getId()){
+                throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR,"活动信息异常");
+            }else if(itemById.getPromoModel().getStatus()!=2){
+                throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR,"活动还未开始");
+            }
+        }
         // 2. 落单减库存
         if (!itemService.decreaseStock(itemId,amount)) {
             throw new BusinessException(EmBusinessError.STOCK_NOT_ENOUGH,"");
@@ -66,9 +74,14 @@ public class OrderServiceImpl implements OrderService {
         orderModel.setUserId(userId);
         orderModel.setItemId(itemId);
         orderModel.setAmount(amount);
-        orderModel.setItemPrice(itemById.getPrice());
-        orderModel.setOrderPrice(itemById.getPrice().multiply(new BigDecimal(amount)));
+        if(promoId!=null){
+            orderModel.setItemPrice(itemById.getPromoModel().getPromoItemPrice());
+        }else{
+            orderModel.setItemPrice(itemById.getPrice());
+        }
+        orderModel.setOrderPrice(orderModel.getItemPrice().multiply(new BigDecimal(amount)));
         orderModel.setAmount(amount);
+        orderModel.setPromoId(promoId);
         // 生成交易订单号
         orderModel.setId(orderService.generateOrderNO());
         // 4. 返回前端

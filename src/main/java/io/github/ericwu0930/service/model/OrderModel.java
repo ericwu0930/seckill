@@ -16,6 +16,8 @@ import java.math.BigDecimal;
 public class OrderModel {
     private String id;
 
+    private Integer promoId;
+
     private BigDecimal itemPrice;
 
     // 购买时商品单价

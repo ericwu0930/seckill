@@ -24,8 +24,9 @@ public class OrderController extends BaseController{
     private OrderService orderService;
 
     public CommonReturnType createOrder(@RequestParam(name="itemId")Integer itemId,
-                                        @RequestParam(name="amount")Integer amount) throws BusinessException {
-        OrderModel order = orderService.createOrder(null, itemId, amount);
+                                        @RequestParam(name="amount")Integer amount,
+                                        @RequestParam(name="promoId",required = false)Integer promoId ) throws BusinessException {
+        OrderModel order = orderService.createOrder(null, itemId, promoId, amount);
         return CommonReturnType.create(order);
     }
 }

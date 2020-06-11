@@ -57,6 +57,11 @@
             <label class="control-label" id="sales"/>
         </div>
     </div>
+    <div class="form-actions">
+        <button class="btn blue" id="createOrder" type="submit">
+            立即购买
+        </button>
+    </div>
 </div>
 </body>
 <script>
@@ -136,11 +141,11 @@
             $("#promoStartTime").text("秒杀活动将于："+g_itemVO.startTime+" 开始售卖 倒计时"+delta+"秒");
             $("#promoPrice").text(g_itemVO.promoPrice);
 
-            $("#createorder").attr("disabled",true);
+            $("#createOrder").attr("disabled",true);
         }else if(g_itemVO.promoStatus==2){
             // 活动开始了
             $("#promoStartTime").text("秒杀正在进行中");
-            $("#createorder").attr("disabled",true);
+            $("#createOrder").attr("disabled",true);
             $("#normalPriceContainer").hide();
         }
     }
