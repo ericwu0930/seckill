@@ -7,3 +7,11 @@ https://www.cnblogs.com/panchanggui/p/10318368.html
 6. 事务aop 如何实现类内方法的事务回滚 https://www.cnblogs.com/wlwl/p/10092494.html
 7. DateTime类
 8. 关于pluginManagement https://blog.csdn.net /joenqc/article/details/54910629
+9. 实在排查不出问题的时候重新编译一下
+10. maven的各个生命周期依赖于各种plugin，要对springboot打包要把这个包含在其中
+```xml
+<plugin>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-maven-plugin</artifactId>
+</plugin>
+```
