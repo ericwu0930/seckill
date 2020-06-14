@@ -6,3 +6,4 @@ https://www.cnblogs.com/panchanggui/p/10318368.html
 5. 看一下mybatis的上锁操作 select for update
 6. 事务aop 如何实现类内方法的事务回滚 https://www.cnblogs.com/wlwl/p/10092494.html
 7. DateTime类
+8. 关于pluginManagement https://blog.csdn.net /joenqc/article/details/54910629
