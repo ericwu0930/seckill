@@ -52,8 +52,8 @@ public class UserServiceImpl implements UserService {
         } catch (Exception e) {
             throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR,"手机号已重复");
         }
-        userModel.setId(user.getId());
 
+        userModel.setId(user.getId());
         UserPassword userPassword=convertPasswordFromModel(userModel);
         userPasswordMapper.insertSelective(userPassword);
     }
@@ -83,7 +83,7 @@ public class UserServiceImpl implements UserService {
             return null;
         UserPassword userPassword = new UserPassword();
         userPassword.setEncrptPassword(userModel.getEncrptPassword());
-        userPassword.setId(userModel.getId());
+        userPassword.setUserId(userModel.getId());
         return userPassword;
     }
 
