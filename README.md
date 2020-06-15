@@ -15,3 +15,4 @@ https://www.cnblogs.com/panchanggui/p/10318368.html
     <artifactId>spring-boot-maven-plugin</artifactId>
 </plugin>
 ```
+11. nginx配置 https://www.jianshu.com/p/d3fb148cb5eb
