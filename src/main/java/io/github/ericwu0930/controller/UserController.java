@@ -13,6 +13,7 @@ import org.apache.tomcat.util.descriptor.web.MessageDestinationRef;
 import org.apache.tomcat.util.security.MD5Encoder;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +26,8 @@ import java.security.MessageDigest;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author erichwu
@@ -41,6 +44,9 @@ public class UserController extends BaseController {
     @Autowired
     private  HttpServletRequest httpServletRequest;
 
+    @Autowired
+    private RedisTemplate redisTemplate;
+
     // 用户登录接口
     @ResponseBody
     @RequestMapping(value="/login",method={RequestMethod.POST},consumes={CONTENT_TYPE_FORMED})
@@ -50,11 +56,14 @@ public class UserController extends BaseController {
         }
         // 用户登录服务，校验用户登录是否合法
         UserModel userModel = userService.validateLogin(telephone, EncodeByMD5(password));
-
-        // 将登录凭证加入到用户登陆成功的session内
-        this.httpServletRequest.getSession().setAttribute("IS_LOGIN",true);
-        this.httpServletRequest.getSession().setAttribute("LOGIN_USER",userModel);
-        return CommonReturnType.create(null);
+        String uuid = UUID.randomUUID().toString();
+        uuid.replace("-","");
+        redisTemplate.opsForValue().set(uuid,userModel);
+        redisTemplate.expire(uuid,1, TimeUnit.HOURS);
+//        // 将登录凭证加入到用户登陆成功的session内
+//        this.httpServletRequest.getSession().setAttribute("IS_LOGIN",true);
+//        this.httpServletRequest.getSession().setAttribute("LOGIN_USER",userModel);
+        return CommonReturnType.create(uuid);
     }
 
     //用户注册接口

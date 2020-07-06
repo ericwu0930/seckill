@@ -42,9 +42,14 @@
     var g_itemList = [];
     jQuery(document).ready(function () {
         $("#createorder").on("click",function(){
+            var token=window.localStorage["token"];
+            if(token==null){
+                alert("没有登录,不能下单");
+                return false;
+            }
             $.ajax({
                 type:"post",
-                url:"http://"+g_host+"/order/createorder",
+                url:"http://"+g_host+"/order/createorder?token="+token,
                 data:{
                     "itemId":g_itemVO.id,
                     "amount":1,
