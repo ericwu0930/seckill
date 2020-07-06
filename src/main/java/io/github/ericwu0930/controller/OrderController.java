@@ -1,9 +1,11 @@
 package io.github.ericwu0930.controller;
 
 import io.github.ericwu0930.error.BusinessException;
+import io.github.ericwu0930.error.EmBusinessError;
 import io.github.ericwu0930.response.CommonReturnType;
 import io.github.ericwu0930.service.OrderService;
 import io.github.ericwu0930.service.model.OrderModel;
+import io.github.ericwu0930.service.model.UserModel;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -36,8 +38,11 @@ public class OrderController extends BaseController{
                                         @RequestParam(name="promoId",required = false)Integer promoId ) throws BusinessException {
         String token = httpServletRequest.getParameterMap().get("token")[0];
         if(StringUtils.isEmpty(token))
-            throw new BusinessException()
-        OrderModel order = orderService.createOrder(null, itemId, promoId, amount);
+            throw new BusinessException(EmBusinessError.USER_NOT_LOGIN,"用户还没登录不能下单");
+        UserModel userModel = (UserModel) redisTemplate.opsForValue().get(token);
+        if(userModel==null)
+            throw new BusinessException(EmBusinessError.USER_NOT_LOGIN,"用户还没登录不能下单");
+        OrderModel order = orderService.createOrder(userModel.getId(), itemId, promoId, amount);
         return CommonReturnType.create(order);
     }
 }
