@@ -99,7 +99,7 @@ public class OrderServiceImpl implements OrderService {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(now);
         // 中间6位自增序列
-        Sequence order_info = sequenceMapper.getSequenceByName("order_info");
+        Sequence order_info = sequenceMapper.selectByPrimaryKey("order_info");
         Integer currentValue = order_info.getCurrentValue();
         order_info.setCurrentValue(order_info.getStep()+order_info.getCurrentValue());
         sequenceMapper.updateByPrimaryKeySelective(order_info);

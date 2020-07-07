@@ -36,30 +36,30 @@ import java.util.concurrent.TimeUnit;
 
 @Controller
 @RequestMapping("/user")
-@CrossOrigin(allowCredentials = "true",allowedHeaders = "*") //跨域访问 是session可以共享
+@CrossOrigin(allowCredentials = "true", allowedHeaders = "*") //跨域访问 是session可以共享
 public class UserController extends BaseController {
     @Autowired
     private UserService userService;
 
     @Autowired
-    private  HttpServletRequest httpServletRequest;
+    private HttpServletRequest httpServletRequest;
 
     @Autowired
     private RedisTemplate redisTemplate;
 
     // 用户登录接口
     @ResponseBody
-    @RequestMapping(value="/login",method={RequestMethod.POST},consumes={CONTENT_TYPE_FORMED})
-    public CommonReturnType login(@RequestParam(name="telephone")String telephone,@RequestParam(name="password")String password) throws Exception {
-        if(org.apache.commons.lang3.StringUtils.isEmpty(telephone)|| StringUtils.isEmpty(password)){
+    @RequestMapping(value = "/login", method = {RequestMethod.POST}, consumes = {CONTENT_TYPE_FORMED})
+    public CommonReturnType login(@RequestParam(name = "telephone") String telephone, @RequestParam(name = "password") String password) throws Exception {
+        if (org.apache.commons.lang3.StringUtils.isEmpty(telephone) || StringUtils.isEmpty(password)) {
             throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR);
         }
         // 用户登录服务，校验用户登录是否合法
         UserModel userModel = userService.validateLogin(telephone, EncodeByMD5(password));
         String uuid = UUID.randomUUID().toString();
-        uuid.replace("-","");
-        redisTemplate.opsForValue().set(uuid,userModel);
-        redisTemplate.expire(uuid,1, TimeUnit.HOURS);
+        uuid = uuid.replaceAll("-", "");
+        redisTemplate.opsForValue().set(uuid, userModel);
+        redisTemplate.expire(uuid, 1, TimeUnit.HOURS);
 //        // 将登录凭证加入到用户登陆成功的session内
 //        this.httpServletRequest.getSession().setAttribute("IS_LOGIN",true);
 //        this.httpServletRequest.getSession().setAttribute("LOGIN_USER",userModel);
@@ -68,20 +68,20 @@ public class UserController extends BaseController {
 
     //用户注册接口
     @ResponseBody
-    @RequestMapping(value="/register",method={RequestMethod.POST},consumes={CONTENT_TYPE_FORMED})
-    public CommonReturnType register(@RequestParam(name="telephone")String telephone,@RequestParam(name="otpCode")String otpCode,
-                                     @RequestParam(name="name")String name,@RequestParam(name="gender")Byte gender,
-                                     @RequestParam(name="age")Integer age,
-                                     @RequestParam(name="password") String password) throws Exception {
+    @RequestMapping(value = "/register", method = {RequestMethod.POST}, consumes = {CONTENT_TYPE_FORMED})
+    public CommonReturnType register(@RequestParam(name = "telephone") String telephone, @RequestParam(name = "otpCode") String otpCode,
+                                     @RequestParam(name = "name") String name, @RequestParam(name = "gender") Byte gender,
+                                     @RequestParam(name = "age") Integer age,
+                                     @RequestParam(name = "password") String password) throws Exception {
         System.out.println("进入register");
         // 验证手机号和对应的optcode相符合
         String inSessionOtpCode = (String) this.httpServletRequest.getSession().getAttribute(telephone);
-        if(!com.alibaba.druid.util.StringUtils.equals(otpCode,inSessionOtpCode)){
-            throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR,"短信验证码不正确");
+        if (!com.alibaba.druid.util.StringUtils.equals(otpCode, inSessionOtpCode)) {
+            throw new BusinessException(EmBusinessError.PARAMETER_VALIDATION_ERROR, "短信验证码不正确");
         }
 
         // 用户的注册流程
-        UserModel userModel= new UserModel();
+        UserModel userModel = new UserModel();
         userModel.setName(name);
         userModel.setGender(gender);
         userModel.setAge(age);
@@ -105,11 +105,11 @@ public class UserController extends BaseController {
 
     @RequestMapping("/get")
     @ResponseBody
-    public CommonReturnType getUSer(@RequestParam(name="id")Integer id) throws BusinessException {
+    public CommonReturnType getUSer(@RequestParam(name = "id") Integer id) throws BusinessException {
         // 调用service服务获取对应的id的用户对象并且返回到前端
         UserModel userById = userService.getUserById(id);
 
-        if(userById==null){
+        if (userById == null) {
             throw new BusinessException(EmBusinessError.USER_NOT_EXIST);
         }
 
@@ -118,29 +118,29 @@ public class UserController extends BaseController {
     }
 
 
-    @RequestMapping(value="/getotp",method={RequestMethod.POST},consumes={CONTENT_TYPE_FORMED})
+    @RequestMapping(value = "/getotp", method = {RequestMethod.POST}, consumes = {CONTENT_TYPE_FORMED})
     @ResponseBody
-    public CommonReturnType getOtp(@RequestParam(name="telephone")String telephone){
+    public CommonReturnType getOtp(@RequestParam(name = "telephone") String telephone) {
         // 需要按照一定的规则，生成otp验证码
-        Random random=new Random();
+        Random random = new Random();
         int randomInt = random.nextInt(99999);
-        randomInt+=10000;
-        String optCode=String.valueOf(randomInt);
+        randomInt += 10000;
+        String optCode = String.valueOf(randomInt);
 
         // 将opt验证码从对应用户的手机号关联，使用httpsession的方式绑定他的手机号与optcode
-        httpServletRequest.getSession().setAttribute(telephone,optCode);
+        httpServletRequest.getSession().setAttribute(telephone, optCode);
 
         // 将opt验证码通过短信通道发送给用户，省略
-        System.out.println("telephone="+telephone+"&optCode="+optCode);
+        System.out.println("telephone=" + telephone + "&optCode=" + optCode);
 
         return CommonReturnType.create(null);
     }
 
-    private UserVO convertFromModel(UserModel userModel){
-        if(userModel==null)
+    private UserVO convertFromModel(UserModel userModel) {
+        if (userModel == null)
             return null;
-        UserVO userVO=new UserVO();
-        BeanUtils.copyProperties(userModel,userVO);
+        UserVO userVO = new UserVO();
+        BeanUtils.copyProperties(userModel, userVO);
         return userVO;
     }
 

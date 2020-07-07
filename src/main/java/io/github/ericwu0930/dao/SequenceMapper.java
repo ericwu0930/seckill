@@ -52,6 +52,4 @@ public interface SequenceMapper {
      * @mbg.generated Sun May 24 20:36:58 CST 2020
      */
     int updateByPrimaryKey(Sequence record);
-
-    Sequence getSequenceByName(String name);
 }

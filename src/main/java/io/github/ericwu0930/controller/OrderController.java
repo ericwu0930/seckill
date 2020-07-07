@@ -32,6 +32,7 @@ public class OrderController extends BaseController{
     @Autowired
     private RedisTemplate redisTemplate;
 
+    @ResponseBody
     @RequestMapping(value="/createorder",method={RequestMethod.POST},consumes={CONTENT_TYPE_FORMED})
     public CommonReturnType createOrder(@RequestParam(name="itemId")Integer itemId,
                                         @RequestParam(name="amount")Integer amount,
